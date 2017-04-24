@@ -13,8 +13,8 @@ index_bp = Blueprint('index', __name__, url_prefix='/api/v1/index')
 @error_decorate
 def index():
     '''文章列表'''
-    offset = request.args.get('offset', 1)  # 第几页
-    limit = request.args.get('limit', 10)    # 返回几个
+    offset = request.args.get('page', 1)  # 第几页
+    limit = request.args.get('per_page', 10)    # 返回几个
     return jsonify(paginate(Post.query, offset, limit, related=True))
 
 
@@ -22,8 +22,8 @@ def index():
 @error_decorate
 def article_detailed():
     '''文章详情'''
-    offset = request.args.get('article_id', 1)
-    query = Post.query.get(int(offset))
+    article_id = request.args.get('article_id', 1)
+    query = Post.query.get(int(article_id))
     if query is None:
         return jsonify({})
     else:
@@ -34,9 +34,20 @@ def article_detailed():
 @error_decorate
 def category():
     '''分类列表'''
-    offset = request.args.get('offset', 1)  # 第几页
-    limit = request.args.get('limit', 10)    # 返回几个
+    offset = request.args.get('page', 1)  # 第几页
+    limit = request.args.get('per_page', 10)    # 返回几个
     return jsonify(paginate(Category.query, offset, limit))
+
+@index_bp.route('/category/detailed')
+@error_decorate
+def category_detailed():
+    '''分类详情'''
+    category_id = request.args.get('category_id', 1)
+    query = Category.query.get(int(category_id))
+    if query is None:
+        return jsonify({})
+    else:
+        return jsonify(to_json(query))
 
 
 @index_bp.route('/category/article')
@@ -44,8 +55,8 @@ def category():
 def category_article():
     '''单个分类列表'''
     category_id = request.args.get('category_id', '')
-    offset = request.args.get('offset', 1)
-    limit = request.args.get('limit', 10)
+    offset = request.args.get('page', 1)
+    limit = request.args.get('per_page', 10)
     query = Category.query.get(int(category_id))
     if query is not None:
         return jsonify(paginate(query.posts, offset, limit))

@@ -27,7 +27,13 @@ def to_json(obj, related=False):
         try:
             if related:
                 for column in inspect(model_ojb).attrs.keys():
-                    tmp[column] = str(getattr(model_ojb, column))
+                    value = getattr(model_ojb, column)
+                    if isinstance(value, datetime):
+                        tmp[column] = value.strftime('%Y-%m-%d %H:%M:%S')
+                    elif isinstance(value, int):
+                        tmp[column] = value
+                    else:
+                        tmp[column] = str(getattr(model_ojb, column))
             else:
                 for column in model_ojb.__table__.columns:
                     value = getattr(model_ojb, column.name)

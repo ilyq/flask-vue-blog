@@ -31,8 +31,8 @@ def index():
 @is_authenticated
 def category():
     if request.method == 'GET':
-        offset = request.args.get('offset', 1)  # 第几页
-        limit = request.args.get('limit', 10)  # 返回几个
+        offset = request.args.get('page', 1)  # 第几页
+        limit = request.args.get('per_page', 10)  # 返回几个
         return jsonify(paginate(Category.query, offset, limit))
     elif request.method == 'POST':
         # 创建
@@ -90,8 +90,8 @@ def category():
 @error_decorate
 def article():
     if request.method == 'GET':
-        offset = request.args.get('offset', 1)  # 第几页
-        limit = request.args.get('limit', 10)    # 返回几个
+        offset = request.args.get('page', 1)  # 第几页
+        limit = request.args.get('per_page', 10)    # 返回几个
         return jsonify(paginate(Post.query, offset, limit, related=True))
     elif request.method == 'POST':
         request_data = request.get_json()
