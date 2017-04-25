@@ -32,6 +32,8 @@ def to_json(obj, related=False):
                         tmp[column] = value.strftime('%Y-%m-%d %H:%M:%S')
                     elif isinstance(value, int):
                         tmp[column] = value
+                    elif isinstance(value, unicode):
+                        tmp[column] = value.encode('utf-8')
                     else:
                         tmp[column] = str(getattr(model_ojb, column))
             else:

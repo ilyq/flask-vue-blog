@@ -95,6 +95,7 @@ def article():
         return jsonify(paginate(Post.query, offset, limit, related=True))
     elif request.method == 'POST':
         request_data = request.get_json()
+        print(request_data)
 
         category_query = Category.query.filter_by(name=request_data.get('category')).first()
         if category_query is None:
