@@ -26,6 +26,17 @@ def index():
         return jsonify(data)
 
 
+@admin_bp.route('/verify/token', methods=['GET'])
+@error_decorate
+@is_authenticated
+def verify_token():
+    '''verify token'''
+    data = {
+        'msg': 'verify success'
+    }
+    return jsonify(data)
+
+
 @admin_bp.route('/category', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @error_decorate
 @is_authenticated
