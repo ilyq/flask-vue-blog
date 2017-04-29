@@ -18,7 +18,7 @@ def dump_datetime(value):
     return [value.strftime('%Y-%m-%d'), value.strftime("%H:%M:%S")]
 
 
-def to_json(obj, related=False):
+def to_json(obj, related=False, summary=False):
     '''序列化model
     http://stackoverflow.com/questions/1958219/convert-sqlalchemy-row-object-to-python-dict
     '''
@@ -28,14 +28,23 @@ def to_json(obj, related=False):
             if related:
                 for column in inspect(model_ojb).attrs.keys():
                     value = getattr(model_ojb, column)
-                    if isinstance(value, datetime):
-                        tmp[column] = value.strftime('%Y-%m-%d %H:%M:%S')
-                    elif isinstance(value, int):
-                        tmp[column] = value
-                    elif isinstance(value, unicode):
-                        tmp[column] = value.encode('utf-8')
+                    if str(column) == 'body':
+                        if summary:
+                            result = value[:250].encode('utf-8')
+                            if not result.count('```') / 2:
+                                result += '```'
+                            tmp[column] = result
+                        else:
+                            tmp[column] = value.encode('utf-8')
                     else:
-                        tmp[column] = str(getattr(model_ojb, column))
+                        if isinstance(value, datetime):
+                            tmp[column] = value.strftime('%Y-%m-%d %H:%M:%S')
+                        elif isinstance(value, int):
+                            tmp[column] = value
+                        elif isinstance(value, unicode):
+                            tmp[column] = value.encode('utf-8')
+                        else:
+                            tmp[column] = str(getattr(model_ojb, column))
             else:
                 for column in model_ojb.__table__.columns:
                     value = getattr(model_ojb, column.name)
@@ -57,7 +66,7 @@ def to_json(obj, related=False):
         return core(obj)
 
 
-def paginate(obj, page=1, per_page=10, error_out=False, related=False):
+def paginate(obj, page=1, per_page=10, error_out=False, related=False, summary=False):
     '''分页'''
     query = obj.paginate(page=int(page), per_page=int(per_page), error_out=error_out)
     data = {
@@ -67,6 +76,6 @@ def paginate(obj, page=1, per_page=10, error_out=False, related=False):
         "has_next": query.has_next,  # 是否有下一页数据
         "has_prev": query.has_prev,  # 是否有前一页数据
         "total": query.total,  # 总共多少数据
-        "data": to_json(query.items, related=related)
+        "data": to_json(query.items, related=related, summary=summary)
     }
     return data

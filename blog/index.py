@@ -15,7 +15,7 @@ def index():
     '''文章列表'''
     offset = request.args.get('page', 1)  # 第几页
     limit = request.args.get('per_page', 10)    # 返回几个
-    return jsonify(paginate(Post.query, offset, limit, related=True))
+    return jsonify(paginate(Post.query, offset, limit, related=True, summary=True))
 
 
 @index_bp.route('/article/detailed')
