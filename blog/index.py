@@ -18,7 +18,7 @@ def index():
     return jsonify(paginate(Post.query, offset, limit, related=True, summary=True))
 
 
-@index_bp.route('/article/detailed')
+@index_bp.route('/article/info')
 @error_decorate
 def article_detailed():
     '''文章详情'''
