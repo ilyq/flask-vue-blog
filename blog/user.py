@@ -10,7 +10,7 @@ from blog.tools import get_random_token
 from blog.auth import auth_list
 
 
-user_bp = Blueprint('user', __name__, url_prefix='/api/v1/user')
+user_bp = Blueprint('user', __name__, url_prefix='/v1/user')
 
 
 def check_password(pw_hash, password):

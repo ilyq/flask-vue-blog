@@ -6,7 +6,7 @@ from blog.tools import paginate, to_json
 from blog.error import error_decorate
 
 
-index_bp = Blueprint('index', __name__, url_prefix='/api/v1/index')
+index_bp = Blueprint('index', __name__, url_prefix='/v1/index')
 
 
 @index_bp.route('/article')

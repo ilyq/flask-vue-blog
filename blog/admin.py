@@ -9,7 +9,7 @@ from blog.error import error_decorate
 from blog.tools import to_json, paginate
 
 
-admin_bp = Blueprint('admin', __name__, url_prefix='/api/v1/admin')
+admin_bp = Blueprint('admin', __name__, url_prefix='/v1/admin')
 
 
 @admin_bp.route('/index', methods=['POST'])
